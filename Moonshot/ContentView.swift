@@ -8,34 +8,31 @@
 
 import SwiftUI
 
-struct Crew {
-    let role: String
-    let astronaut: Astronaut
-}
-
 struct ContentView: View {
     let astronauts:[Astronaut] = Bundle.main.decode("astronauts.json")
     let missions: [Mission] = Bundle.main.decode("missions.json")
     
     @State var showLaunchDates = true
-    var crews = [Crew]()
+    @State var crews = [String]()
     
     var body: some View {
         NavigationView {
-            List(missions) { mission in
-                NavigationLink(destination: MissionView(mission: mission, astronauts: self.astronauts)) {
-                    Image(mission.image)
+            List{
+                ForEach(0..<missions.count) { index in
+                    NavigationLink(destination: MissionView(mission: self.missions[index], astronauts: self.astronauts)) {
+                    Image(self.missions[index].image)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 44, height: 44)
 
                     VStack(alignment: .leading) {
-                        Text(mission.displayName)
+                        Text(self.missions[index].displayName)
                             .font(.headline)
-                        Text(mission.formattedLaunchDate)
+                        Text(self.showLaunchDates ? self.missions[index].formattedLaunchDate : self.crews[index])
                     }
                 }
             }
+        }
             .navigationBarTitle("Moonshot")
             .navigationBarItems(trailing:
                 Button(action: {
@@ -44,31 +41,33 @@ struct ContentView: View {
                         
                     }
                     else{
-                       // calculateMembers()
+                       self.calculateMembers()
                     }
                 }, label: {
-                    Text(self.showLaunchDates ? "Launch Date" : "Crew")
+                    Text(self.showLaunchDates ? "Crew?" : "Launch Date?")
                 })
             )
         }
     }
     
-//    mutating func calculateMembers() {
-//
-//        var matches = [Crew]()
-//
-//        for mission in missions {
-//            for member in mission.crew {
-//                if let match = astronauts.first(where: { $0.id == member.name }) {
-//                    matches.append(Crew(role: member.role, astronaut: match))
-//                } else {
-//                    fatalError("Missing \(member)")
-//                }
-//            }
-//        }
-//
-//        crews = matches
-//    }
+    func calculateMembers() {
+
+        var matches = ""
+
+        for mission in missions {
+            for member in mission.crew {
+                if let astranaut = astronauts.first(where: { $0.id == member.name }) {
+                    matches.append(astranaut.name + ", ")
+                } else {
+                    fatalError("Missing \(member)")
+                }
+            }
+            matches = String(matches.dropLast())
+            matches = String(matches.dropLast())
+            crews.append(matches)
+            matches = ""
+        }
+    }
 }
 
 //struct ContentView_Previews: PreviewProvider {
