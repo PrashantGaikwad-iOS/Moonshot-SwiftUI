@@ -20,28 +20,28 @@ struct ContentView: View {
             List{
                 ForEach(0..<missions.count) { index in
                     NavigationLink(destination: MissionView(mission: self.missions[index], astronauts: self.astronauts)) {
-                    Image(self.missions[index].image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 44, height: 44)
-
-                    VStack(alignment: .leading) {
-                        Text(self.missions[index].displayName)
-                            .font(.headline)
-                        Text(self.showLaunchDates ? self.missions[index].formattedLaunchDate : self.crews[index])
+                        Image(self.missions[index].image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 44, height: 44)
+                        
+                        VStack(alignment: .leading) {
+                            Text(self.missions[index].displayName)
+                                .font(.headline)
+                            Text(self.showLaunchDates ? self.missions[index].formattedLaunchDate : self.crews[index])
+                        }
                     }
                 }
             }
-        }
             .navigationBarTitle("Moonshot")
             .navigationBarItems(trailing:
                 Button(action: {
                     self.showLaunchDates = !self.showLaunchDates
                     if self.showLaunchDates {
-                        
+                        // do something...
                     }
                     else{
-                       self.calculateMembers()
+                        self.calculateMembers()
                     }
                 }, label: {
                     Text(self.showLaunchDates ? "Crew?" : "Launch Date?")
@@ -51,9 +51,9 @@ struct ContentView: View {
     }
     
     func calculateMembers() {
-
+        
         var matches = ""
-
+        
         for mission in missions {
             for member in mission.crew {
                 if let astranaut = astronauts.first(where: { $0.id == member.name }) {
@@ -102,34 +102,34 @@ struct ContentView: View {
  
  
  NavigationView {
-     List(0..<100) { row in
-             NavigationLink(destination:Text("Row \(row)")) {
-                 Text("Row \(row)")
-             }
-         }
-     .navigationBarTitle("SwiftUI")
-     }
+ List(0..<100) { row in
+ NavigationLink(destination:Text("Row \(row)")) {
+ Text("Row \(row)")
+ }
+ }
+ .navigationBarTitle("SwiftUI")
+ }
  }
  
  
  
  NavigationView {
  Button("Decode JSON") {
-     let input = """
-     {
-         "name": "Taylor Swift",
-         "address": {
-             "street": "555, Taylor Swift Avenue",
-             "city": "Nashville"
-         }
-     }
-     """
-
-     let data = Data(input.utf8)
-     let decoder = JSONDecoder()
-     if let user = try? decoder.decode(User.self, from: data) {
-         print(user.address.street)
-     }
+ let input = """
+ {
+ "name": "Taylor Swift",
+ "address": {
+ "street": "555, Taylor Swift Avenue",
+ "city": "Nashville"
+ }
+ }
+ """
+ 
+ let data = Data(input.utf8)
+ let decoder = JSONDecoder()
+ if let user = try? decoder.decode(User.self, from: data) {
+ print(user.address.street)
+ }
  }
  .navigationBarTitle("SwiftUI")
  }
